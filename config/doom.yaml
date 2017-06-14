@@ -3,5 +3,5 @@ env: "DOOM"
 use_rgb: true
 rescale_rewards: false
 reward_clip_val: 0.0
-alg_type: "a3c"
+alg_type: "a3c-lstm"
 num_actor_learners: 8

@@ -25,17 +25,21 @@ class VizDoomEnv(object):
       self.env.set_mode(Mode.ASYNC_PLAYER)
     self.env.init()
 
+
   def get_actions(self):
     return self.action_size, self.actions
 
+
   def get_input_shape(self):
     return [self.height, self.width]
+
 
   def get_initial_state(self):
     self.env.new_episode()
     screen = self.env.get_state().screen_buffer
     
     return resize(screen, (self.height, self.width), mode='constant')
+
 
   def get_preprocess_frame(self, observation):
     if not self.use_rgb:
@@ -44,11 +48,34 @@ class VizDoomEnv(object):
 
     return observation
 
+
+  def get_total_reward(self):
+    return self.env.get_total_reward()
+
+
   def set_visible(self, visible=True):
     self.env.set_window_visible(visible)
 
+
   def set_async(self):
     self.env.set_mode(Mode.ASYNC_PLAYER)
+
+
+  def test_next(self, action):
+    a = action.nonzero()[0][0]
+    self.env.set_action(self.actions[a])
+    for _ in range(self.frame_repeat):
+      self.env.advance_action()
+    terminal = self.env.is_episode_finished()
+    reward = self.env.get_last_reward()
+    if not terminal:
+      screen = self.env.get_state().screen_buffer
+      screen = resize(screen, (self.height, self.width), mode='constant')
+    else:
+      screen = None
+    
+    return screen, reward, terminal
+
 
   def next(self, action):
     prev_ammo, prev_health, prev_kill = self.env.get_state().game_variables
