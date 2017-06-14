@@ -32,10 +32,7 @@ class Network(object):
 
     def _init_placeholders(self):
         with tf.variable_scope(self.name):
-            if self.arch == 'FC':
-                self.input_ph = tf.placeholder('float32', [self.batch_size]+self.input_shape+[self.input_channels], name='input')
-            else: #assume image input
-                self.input_ph = tf.placeholder('float32',[self.batch_size]+self.input_shape+[self.input_channels], name='input')
+            self.input_ph = tf.placeholder('float32', [self.batch_size]+self.input_shape+[self.input_channels], name='input')
 
             if self.use_recurrent:
                 self.hidden_state_size = 256
@@ -70,9 +67,9 @@ class Network(object):
                 self.w3, self.b3, self.o3 = layers.conv2d('conv3', self.o2, 64, 3, 64, 1, activation=self.activation)
                 self.w4, self.b4, self.o4 = layers.fc('fc4', layers.flatten(self.o3), 512, activation=self.activation)
                 self.ox = self.o4
+            # TODO: add UNREAL network arch
             else:
                 raise Exception('Invalid architecture `{}`'.format(self.arch))
-
 
             if self.use_recurrent:
                 with tf.variable_scope(self.name+'/lstm_layer') as vs:
