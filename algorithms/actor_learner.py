@@ -133,7 +133,7 @@ class ActorLearner(Process):
                 args.single_life_episodes)
         elif args.env == 'DOOM':
             from environments.vizdoom_env import VizDoomEnv
-            self.emulator = VizDoomEnv(args.doom_cfg, args.game)
+            self.emulator = VizDoomEnv(args.doom_cfg, args.game, args.is_train)
             self.is_doom = True
         else:
             raise Exception('Invalid environment `{}`'.format(args.env))

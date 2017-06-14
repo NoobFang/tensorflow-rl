@@ -63,7 +63,7 @@ def main(args):
         input_shape = atari_environment.get_input_shape(args.game)
     elif args.env == 'DOOM':
         from environments.vizdoom_env import VizDoomEnv
-        env = VizDoomEnv(args.doom_cfg, args.game)
+        env = VizDoomEnv(args.doom_cfg, args.game, args.is_train)
         num_actions, action_space = env.get_actions()
         input_shape = env.get_input_shape()
     else:

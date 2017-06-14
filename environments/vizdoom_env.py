@@ -12,7 +12,7 @@ RESIZE_W = 160
 REPEAT = 12
 
 class VizDoomEnv(object):
-  def __init__(self, cfg_path, game_name):
+  def __init__(self, cfg_path, game_name, is_train):
     self.env = DoomGame()
     self.env.load_config(path.join(cfg_path, game_name)+'.cfg')
     self.height = RESIZE_H
@@ -20,6 +20,9 @@ class VizDoomEnv(object):
     self.frame_repeat = REPEAT
     self.action_size = self.env.get_available_buttons_size()
     self.actions = [list(a) for a in it.product([0, 1], repeat=self.frame_repeat)]
+    if not is_train:
+      self.env.set_window_visible(True)
+      self.env.set_mode(Mode.ASYNC_PLAYER)
     self.env.init()
 
   def get_actions(self):
@@ -43,6 +46,9 @@ class VizDoomEnv(object):
 
   def set_visible(self, visible=True):
     self.env.set_window_visible(visible)
+
+  def set_async(self):
+    self.env.set_mode(Mode.ASYNC_PLAYER)
 
   def next(self, action):
     prev_ammo, prev_health, prev_kill = self.env.get_state().game_variables
