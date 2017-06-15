@@ -50,6 +50,20 @@ class VizDoomEnv(object):
   def set_async(self):
     self.env.set_mode(Mode.ASYNC_PLAYER)
 
+  def test_next(self, action):
+    a = action.nonzero()[0][0]
+    self.env.set_action(self.actions[a])
+    for _ in range(self.frame_repeat):
+      self.env.advance_action()
+    terminal = self.env.is_episode_finished()
+    reward = self.env.get_last_reward()
+    if not terminal:
+      screen = self.env.get_state().screen_buffer
+      screen = resize(screen, (self.height, self.width), mode='constant')
+    else:
+      screen = None
+    return screen, reward, terminal
+
   def next(self, action):
     prev_ammo, prev_health, prev_kill = self.env.get_state().game_variables
     a = action.nonzero()[0][0]

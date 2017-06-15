@@ -194,10 +194,12 @@ class ActorLearner(Process):
 
             while not episode_over:
                 a = self.choose_next_action(s)[0]
-                s, reward, episode_over = self.emulator.next(a)
-
+                if self.is_doom:
+                    s, reward, episode_over = self.emulator.test_next(a)
+                else:
+                    s, reward, episode_over = self.emulator.next(a)
+                
                 total_episode_reward += reward
-
             else:
                 rewards.append(total_episode_reward)
                 logger.info("EPISODE {0} -- REWARD: {1}, RUNNING AVG: {2:.0f}±{3:.0f}, BEST: {4}".format(
